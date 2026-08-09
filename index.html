@@ -128,6 +128,8 @@
   #setup p { font-size: 13.5px; color: var(--soft); margin-bottom: 14px; }
   #setup ol { font-size: 13.5px; color: var(--soft); margin: 0 0 14px 18px; }
   #setup li { margin: 3px 0; }
+  #setup .rule { border: 0; border-top: 1px solid var(--line); margin: 20px 0 18px; }
+  .tip { font-size: 12.5px; color: var(--accent); margin: 10px 0 0 !important; min-height: 1em; }
   .qrrow { display: flex; gap: 14px; align-items: center; }
   #qrThumb {
     width: 84px; height: 84px; flex: none; border-radius: 10px;
@@ -162,6 +164,30 @@
     <img id="qrThumb" alt="我的二维码">
     <button class="btn" id="pickQR" type="button" style="flex:1">选择图片</button>
   </div>
+
+  <hr class="rule">
+
+  <h2>我的自我介绍</h2>
+  <p>活动前写好，整场不变，下场活动再改。三行都是选填 —— 写了才出现在卡片上。
+     标签只是帮你别漏项，卡片上不会印出来。</p>
+  <div class="fields">
+    <div class="field">
+      <label for="introWho">我是谁</label>
+      <input id="introWho" type="text" autocomplete="off"
+             placeholder="Sunny，在做 mu · 全球 builder 驻地">
+    </div>
+    <div class="field">
+      <label for="introInto">对什么感兴趣</label>
+      <input id="introInto" type="text" autocomplete="off"
+             placeholder="怎么让一群陌生人在三周里长出真实的信任">
+    </div>
+    <div class="field">
+      <label for="introReach">怎么联系我</label>
+      <input id="introReach" type="text" autocomplete="off"
+             placeholder="微信 sunnyguo · guo.xiaoyu.work@gmail.com">
+    </div>
+  </div>
+  <p class="tip" id="introTip"></p>
 </section>
 
 <label class="shoot" id="shoot" for="photo">

@@ -9,17 +9,18 @@ export const FONT = '"PingFang SC", -apple-system, system-ui, "Noto Sans SC", sa
 
 // 暖纸色系，沿用 cherish-time 报名页的配色；mark 是 mu 的荧光绿
 export const THEME = {
-  bg:     '#F6F1E7',
-  ink:    '#24211F',
-  soft:   '#8A857C',
-  accent: '#C4552A',
-  mark:   '#C4552A',
-  white:  '#FFFFFF',
+  bg:       '#F6F1E7',
+  ink:      '#24211F',
+  soft:     '#8A857C',
+  accent:   '#C4552A',
+  mark:     '#C4552A',
+  white:    '#FFFFFF',
+  hairline: 'rgba(36,33,31,.15)',
 };
 
 export const CARD = {
   W: 1080,
-  H: 1440,
+  H: 1440,             // 没写自我介绍时的高度；写了会按行数往下长，见 card.js 的 cardHeight()
   PAD: 64,
 
   PHOTO_H: 900,
@@ -36,6 +37,13 @@ export const CARD = {
   LINE_LH: 1.45,
   SIGN_SIZE: 24,
   HINT_SIZE: 22,
+
+  // 自我介绍：活动前写好、整场不变的三行。第一行是「我是谁」，稍重；后两行安静一些。
+  INTRO_SIZES: [[28, 26, 24], [26, 24, 22], [24, 22, 20]],
+  INTRO_LH: 50,
+  INTRO_GAP_TOP: 50,   // 二维码提示语到分隔线
+  INTRO_GAP_LINE: 52,  // 分隔线到第一行
+  INTRO_BOTTOM: 62,    // 最后一行到卡片底边
 
   HINT: '长按识别二维码 · Scan to connect',
 

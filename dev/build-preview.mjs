@@ -38,16 +38,23 @@ const PHOTO_LAND = dataURI('photo-land.jpg', 'image/jpeg');
 const PHOTO_PORT = dataURI('photo-port.jpg', 'image/jpeg');
 const QR = dataURI('qr-placeholder.png', 'image/png');
 
+// 活动前写好、整场不变的三行
+const INTRO = {
+  introWho: 'Sunny，在做 mu · 全球 builder 驻地',
+  introInto: '怎么让一群陌生人在三周里长出真实的信任',
+  introReach: '微信 sunnyguo · guo.xiaoyu.work@gmail.com',
+};
+
 const CASES = [
   {
     label: '① 一句话留空',
     note: '现场最忙的时候直接跳过打字。场景行放大顶上，卡片不留空洞 —— 这是最该先看的一张。',
-    state: { photo: 'land', qr: true, name: 'Alex', line: '', event: 'muShenzhen' },
+    state: { photo: 'land', qr: true, name: 'Alex', line: '', event: 'muShenzhen', ...INTRO },
   },
   {
     label: '② 一句话 · 短',
-    note: '最常见的状态。',
-    state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen' },
+    note: '最常见的状态。上半是「这次相遇」，细线以下是「我是谁」。',
+    state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen', ...INTRO },
   },
   {
     label: '③ 一句话 · 中等，中英混排',
@@ -55,31 +62,40 @@ const CASES = [
     state: {
       photo: 'port', qr: true, name: '李然',
       line: '你说 Build in Public 最难的是承认还没做出来，这句我记下了',
-      event: 'muShenzhen · Garage',
+      event: 'muShenzhen · Garage', ...INTRO,
     },
   },
   {
     label: '④ 一句话 · 超长（150 字压力测试）',
-    note: '不该溢出纸带，应该缩到最小号并截断加省略号。',
+    note: '不该溢出纸带，应该自动缩到最小号换取行数。',
     state: {
       photo: 'land', qr: true, name: 'Marta',
       line: '我们从深圳的硬件供应链一路聊到你在里斯本那个 co-living 的运营模型，然后发现两边其实是同一个问题：怎么让一群陌生人在三周之内产生真实的信任，而不是停留在交换名片的层面上，这个我回去还想再想想',
-      event: 'muShenzhen',
+      event: 'muShenzhen', ...INTRO,
     },
   },
   {
-    label: '⑤ 称呼也留空',
-    note: '署名降级成「Sunny · mu」。',
-    state: { photo: 'port', qr: true, name: '', line: '你提到的那本关于城市尺度的书，回头发我', event: 'muShenzhen' },
+    label: '⑤ 只写了两行自我介绍',
+    note: '空的那行直接跳过，卡片跟着变矮 —— 有多少内容就多高。',
+    state: {
+      photo: 'port', qr: true, name: '', line: '你提到的那本关于城市尺度的书，回头发我',
+      event: 'muShenzhen', introWho: INTRO.introWho, introReach: INTRO.introReach,
+    },
   },
   {
-    label: '⑥ 还没上传二维码（兜底）',
-    note: '现场绝不因为缺码而卡住出卡；文字列自动占满整宽。',
-    state: { photo: 'land', qr: false, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen' },
+    label: '⑥ 完全没写自我介绍',
+    note: '落回原来的样子：底部只有一行署名，卡片是 1080×1440。',
+    state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen' },
+  },
+  {
+    label: '⑦ 还没上传二维码（兜底）',
+    note: '现场绝不因为缺码而卡住出卡。',
+    state: { photo: 'land', qr: false, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen', ...INTRO },
   },
 ];
 
 const html = `<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>「遇」· 卡片版式预览</title>
 <style>
   /* 审片台，不是产品本身：底色刻意用冷中性灰，让暖米色的卡片浮在上面成为「物件」，
@@ -154,12 +170,13 @@ const html = `<meta charset="utf-8">
   <p class="sub">1080 × 1440，版式 A「便签」。这些卡片是用最终的 <strong>card.js</strong> 现场渲染的，不是设计稿 —— 你看到的就是产品的输出。只有照片和二维码是占位的。</p>
 
   <div class="intro">
-    <strong>请重点看这五件事：</strong>
+    <strong>加了自我介绍之后，请重点看：</strong>
     <ul>
-      <li>场景行「muShenzhen · 2026.08.09」的分量够不够 —— 你说过要让人记住在什么场景下相遇</li>
-      <li>「Sunny × Alex」双人署名的感觉对不对（还是你更想要「Sunny · mu」）</li>
-      <li>照片和纸带 62.5 : 37.5 的比例，纸带是不是太厚 / 太薄</li>
-      <li>一句话留空那张（①）是否仍然完整好看</li>
+      <li>细线以下那三行 —— 轻重排得对不对（我是谁最重，对什么感兴趣次之，联系方式最轻）</li>
+      <li>三行的措辞是不是你想说的话。<strong>卡片上不印标签</strong>，写什么就是什么</li>
+      <li>称呼从署名行挪到了场景行：「与 Alex · muShenzhen · 2026.08.09」。这样名字属于「这次相遇」，
+          卡片底部整块留给「我是谁」，不重复出现两个 Sunny</li>
+      <li>卡片随介绍行数长高（⑤ 只写两行就矮一截，⑥ 一行没写就退回原来的 1080×1440）</li>
       <li><strong>最后一节</strong>：二维码在微信缩略图尺寸下够不够大</li>
     </ul>
   </div>
@@ -208,14 +225,10 @@ function load(src) {
 
   for (const c of CASES) {
     const canvas = document.createElement('canvas');
-    canvas.width = CARD.W;
-    canvas.height = CARD.H;
     const info = renderCard(canvas.getContext('2d'), {
+      ...c.state,
       img: photos[c.state.photo],
       qrImg: c.state.qr ? qr : null,
-      name: c.state.name,
-      line: c.state.line,
-      event: c.state.event,
       dateStr,
     });
     const url = canvas.toDataURL('image/jpeg', 0.92);
@@ -234,11 +247,13 @@ function load(src) {
 
     const meta = document.createElement('p');
     meta.className = 'meta';
-    const bits = ['一句话 ' + (info.lineSize ? info.lineSize + 'px · ' + info.lineCount + ' 行' : '（空）')];
-    bits.push('场景行 ' + info.sceneSize + 'px');
-    if (info.truncated) bits.push('已截断');
+    const bits = [CARD.W + ' × ' + info.height];
+    bits.push('一句话 ' + (info.lineSize ? info.lineSize + 'px · ' + info.lineCount + ' 行' : '（空）'));
+    bits.push('自我介绍 ' + info.introCount + ' 行');
+    if (info.truncated) bits.push('一句话已截断');
+    if (info.introTruncated.length) bits.push('介绍第 ' + info.introTruncated.map((i) => i + 1).join('/') + ' 行已截断');
     if (!info.hasQR) bits.push('无二维码');
-    meta.textContent = '自适应结果：' + bits.join('　·　');
+    meta.textContent = bits.join('　·　');
 
     sec.append(h2, note, img, meta);
     host.appendChild(sec);

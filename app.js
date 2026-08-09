@@ -4,17 +4,41 @@ import { renderCard, formatDate } from './card.js';
 
 const KEY_QR = 'yu.qr.v1';
 const KEY_EVENT = 'yu.event.v1';
+const KEY_INTRO = 'yu.intro.v1';
 
 const $ = (id) => document.getElementById(id);
 const el = {
   event: $('event'), gear: $('gear'),
   noqr: $('noqr'), noqrFix: $('noqrFix'),
   setup: $('setup'), pickQR: $('pickQR'), qrFile: $('qrFile'), qrThumb: $('qrThumb'),
+  introWho: $('introWho'), introInto: $('introInto'), introReach: $('introReach'),
+  introTip: $('introTip'),
   shoot: $('shoot'), photo: $('photo'),
   stage: $('stage'), preview: $('preview'), savehint: $('savehint'),
   who: $('who'), line: $('line'),
   save: $('save'), send: $('send'),
 };
+
+// 自我介绍：活动前写好，整场不变。三行都可留空。
+const INTRO_FIELDS = ['introWho', 'introInto', 'introReach'];
+
+function readIntro() {
+  return {
+    introWho: el.introWho.value.trim(),
+    introInto: el.introInto.value.trim(),
+    introReach: el.introReach.value.trim(),
+  };
+}
+
+function saveIntro() {
+  localStorage.setItem(KEY_INTRO, JSON.stringify(readIntro()));
+}
+
+function restoreIntro() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY_INTRO) || '{}'); } catch { /* 坏数据就当没写过 */ }
+  INTRO_FIELDS.forEach((k) => { el[k].value = saved[k] || ''; });
+}
 
 const state = {
   img: null,        // 已解码的合影，只在内存
@@ -25,9 +49,8 @@ const state = {
   saved: false,
 };
 
+// 尺寸由 renderCard 定 —— 卡片高度会随自我介绍的行数变
 const canvas = document.createElement('canvas');
-canvas.width = CARD.W;
-canvas.height = CARD.H;
 const ctx = canvas.getContext('2d');
 
 // ── 工具 ──────────────────────────────────────────────
@@ -137,16 +160,23 @@ async function onPickPhoto(file) {
 
 // ── 渲染 ─────────────────────────────────────────────
 
+const INTRO_LABELS = ['我是谁', '对什么感兴趣', '怎么联系我'];
+
 function render() {
   if (!state.img) return;
-  renderCard(ctx, {
+  const info = renderCard(ctx, {
     img: state.img,
     qrImg: state.qrImg,
     name: el.who.value,
     line: el.line.value,
     event: el.event.value.trim(),
     dateStr: formatDate(new Date()),
+    ...readIntro(),
   });
+
+  // 太长的自我介绍会被截断 —— 现在就说，别等她在活动上才发现
+  const cut = (info.introTruncated || []).map((i) => INTRO_LABELS[i]);
+  el.introTip.textContent = cut.length ? `「${cut.join('」「')}」太长了，卡片上会截断` : '';
 
   canvas.toBlob((blob) => {
     if (!blob) return;
@@ -218,6 +248,11 @@ el.gear.addEventListener('click', () => el.setup.classList.toggle('show'));
 
 el.who.addEventListener('input', renderSoon);
 el.line.addEventListener('input', renderSoon);
+
+INTRO_FIELDS.forEach((k) => el[k].addEventListener('input', () => {
+  saveIntro();
+  renderSoon();
+}));
 el.event.addEventListener('input', () => {
   localStorage.setItem(KEY_EVENT, el.event.value.trim());
   renderSoon();
@@ -233,6 +268,7 @@ el.send.addEventListener('click', () => shareFile(() => {}));
 // ── 启动 ─────────────────────────────────────────────
 
 el.event.value = localStorage.getItem(KEY_EVENT) || '';
+restoreIntro();
 loadQRFromStorage();
 updateButtons();
 

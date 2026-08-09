@@ -100,15 +100,29 @@ export function formatDate(d) {
   return `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`;
 }
 
-// 场景行：活动名和日期，两者都可能缺。
+const QR_Y = 948;   // 二维码白块的纵向起点，卡片下半部的所有位置都从它推出来
+
+// 场景行：跟谁、在哪、哪天。称呼放在这里而不是署名行 —— 名字属于「这次相遇」的记录，
+// 而卡片底部留给「我是谁」。三者都可能缺，缺了就不出现。
 function sceneText(state) {
-  return [state.event, state.dateStr].filter(Boolean).join(' · ');
+  const who = (state.name || '').trim();
+  return [who && `与 ${who}`, state.event, state.dateStr].filter(Boolean).join(' · ');
 }
 
-// 署名：有称呼就并列两个名字，这张卡是「我们遇见过」而不是「我的名片」。
-function signText(state) {
-  const who = (state.name || '').trim();
-  return who ? `${OWNER.name} × ${who}` : `${OWNER.name} · ${OWNER.org}`;
+// 自我介绍：活动前写好的三行，空行直接跳过。
+export function introLines(state) {
+  return [state.introWho, state.introInto, state.introReach]
+    .map((s) => (s || '').trim())
+    .filter(Boolean);
+}
+
+// 卡片高度随自我介绍的行数变化 —— 有多少内容就多高，不留空洞也不硬塞。
+export function cardHeight(state) {
+  const n = introLines(state).length;
+  if (!n) return C.H;
+  const hintBaseline = QR_Y + C.QR + C.QR_PAD * 2 + 34;
+  const first = hintBaseline + C.INTRO_GAP_TOP + C.INTRO_GAP_LINE;
+  return Math.round(first + (n - 1) * C.INTRO_LH + C.INTRO_BOTTOM);
 }
 
 /**
@@ -118,8 +132,13 @@ function signText(state) {
  * 返回这次实际用了什么排版（字号、行数、有没有截断），便于调试和预览标注。
  */
 export function renderCard(ctx, state) {
-  const { W, H, PAD, PHOTO_H } = C;
+  const { W, PAD, PHOTO_H } = C;
+  const H = cardHeight(state);
+  const intro = introLines(state);
 
+  // 卡片高度会随自我介绍的行数变，所以由渲染函数自己定 canvas 尺寸（赋值会顺带清空画布）
+  if (ctx.canvas.width !== W) ctx.canvas.width = W;
+  if (ctx.canvas.height !== H) ctx.canvas.height = H;
   ctx.clearRect(0, 0, W, H);
   ctx.textBaseline = 'alphabetic';
   ctx.textAlign = 'left';
@@ -141,8 +160,8 @@ export function renderCard(ctx, state) {
   // ── 二维码白块（右下）──
   const blockSize = C.QR + C.QR_PAD * 2;
   const blockX = W - PAD - blockSize;
-  const blockY = 948;
-  let hintBaseline = 0;
+  const blockY = QR_Y;
+  let hintBaseline = blockY + blockSize + 34;
 
   if (hasQR) {
     ctx.save();
@@ -152,7 +171,6 @@ export function renderCard(ctx, state) {
     ctx.restore();
     ctx.drawImage(state.qrImg, blockX + C.QR_PAD, blockY + C.QR_PAD, C.QR, C.QR);
 
-    hintBaseline = blockY + blockSize + 34;
     ctx.font = `${C.HINT_SIZE}px ${FONT}`;
     ctx.fillStyle = THEME.soft;
     ctx.textAlign = 'center';
@@ -164,12 +182,14 @@ export function renderCard(ctx, state) {
   const textX = PAD;
   const textW = hasQR ? blockX - PAD - C.QR_GUTTER : W - PAD * 2;
 
-  const signBaseline = H - 60;
   const scene = sceneText(state);
   const line = (state.line || '').trim();
 
-  const bodyBottom = hasQR ? hintBaseline - 26 : signBaseline - 40;
-  const info = { hasQR, sceneSize: 0, lineSize: 0, lineCount: 0, truncated: false };
+  // 一句话的可用区间只由二维码的几何位置决定 —— 这样无论有没有码、有没有自我介绍，
+  // 卡片上半部分都是像素一致的。
+  const bodyBottom = hintBaseline - 26;
+  const info = { hasQR, introCount: intro.length, introTruncated: [], height: H,
+                 sceneSize: 0, lineSize: 0, lineCount: 0, truncated: false };
 
   if (line) {
     // 场景行在上，一句话居中于剩余空间
@@ -202,16 +222,45 @@ export function renderCard(ctx, state) {
     info.sceneSize = s.size;
   }
 
-  // ── 署名 ──
+  // ── 底部：写了自我介绍就用它，没写就落回一行署名 ──
   const dotR = 7;
-  ctx.fillStyle = THEME.mark;
-  ctx.beginPath();
-  ctx.arc(textX + dotR, signBaseline - 8, dotR, 0, Math.PI * 2);
-  ctx.fill();
+  const dot = (baseline) => {
+    ctx.fillStyle = THEME.mark;
+    ctx.beginPath();
+    ctx.arc(textX + dotR, baseline - 8, dotR, 0, Math.PI * 2);
+    ctx.fill();
+  };
+  const introX = textX + dotR * 2 + 12;
 
-  ctx.font = `${C.SIGN_SIZE}px ${FONT}`;
-  ctx.fillStyle = THEME.soft;
-  ctx.fillText(signText(state), textX + dotR * 2 + 12, signBaseline);
+  if (intro.length) {
+    // 一条细线把「这次相遇」和「我是谁」分开
+    const ruleY = hintBaseline + C.INTRO_GAP_TOP;
+    ctx.fillStyle = THEME.hairline;
+    ctx.fillRect(PAD, ruleY, W - PAD * 2, 1);
+
+    // 每行独占一行、超宽先缩后截 —— 行数固定，卡片高度才可预测
+    // 三行的轻重不一样：我是谁最重（身份），对什么感兴趣次之（这是对方日后找我的由头），
+    // 联系方式最轻（它是备查的，二维码才是主路径）。
+    const first = ruleY + C.INTRO_GAP_LINE;
+    intro.forEach((text, i) => {
+      const baseline = first + i * C.INTRO_LH;
+      const lead = i === 0;
+      const x = lead ? introX : textX;
+      const f = fitOneLine(ctx, text, W - x - PAD,
+        C.INTRO_SIZES[i] || C.INTRO_SIZES[2], lead ? '600' : '400');
+      if (f.text !== text) info.introTruncated.push(i);
+      if (lead) dot(baseline);
+      ctx.font = `${lead ? '600 ' : ''}${f.size}px ${FONT}`;
+      ctx.fillStyle = i <= 1 ? THEME.ink : THEME.soft;
+      ctx.fillText(f.text, x, baseline);
+    });
+  } else {
+    const signBaseline = H - 60;
+    dot(signBaseline);
+    ctx.font = `${C.SIGN_SIZE}px ${FONT}`;
+    ctx.fillStyle = THEME.soft;
+    ctx.fillText(`${OWNER.name} · ${OWNER.org}`, introX, signBaseline);
+  }
 
   return info;
 }
