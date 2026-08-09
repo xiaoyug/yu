@@ -1,0 +1,44 @@
+// 「遇」的全部可调项。改版式、改配色、改文案，只动这个文件。
+
+export const OWNER = {
+  name: 'Sunny',
+  org: 'mu',           // 称呼留空时，署名降级为「Sunny · mu」
+};
+
+export const FONT = '"PingFang SC", -apple-system, system-ui, "Noto Sans SC", sans-serif';
+
+// 暖纸色系，沿用 cherish-time 报名页的配色；mark 是 mu 的荧光绿
+export const THEME = {
+  bg:     '#F6F1E7',
+  ink:    '#24211F',
+  soft:   '#8A857C',
+  accent: '#C4552A',
+  mark:   '#C4552A',
+  white:  '#FFFFFF',
+};
+
+export const CARD = {
+  W: 1080,
+  H: 1440,
+  PAD: 64,
+
+  PHOTO_H: 900,
+  FOCUS_Y: 0.38,       // <0.5 → cover 裁切时保留画面上部（合影里脸在上半部）
+
+  QR: 330,             // 必须 ≥ 卡片宽度的 30%，否则微信缩略图里扫不动
+  QR_PAD: 16,          // 二维码四周的白边
+  QR_R: 20,            // 白块圆角
+  QR_GUTTER: 28,       // 白块与文字列之间的间距
+
+  SCENE_SIZE: 28,      // 场景行「muShenzhen · 2026.08.09」
+  SCENE_SIZE_SOLO: 38, // 一句话留空时，场景行放大顶上
+  LINE_SIZES: [46, 38, 30],   // 行数上限由可用高度算出，不写死
+  LINE_LH: 1.45,
+  SIGN_SIZE: 24,
+  HINT_SIZE: 22,
+
+  HINT: '长按识别二维码 · Scan to connect',
+
+  MIME: 'image/jpeg',
+  QUALITY: 0.92,
+};
