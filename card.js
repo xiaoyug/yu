@@ -1,5 +1,5 @@
 // 卡片渲染。纯函数，只依赖 ctx 和已解码的图片对象，不碰 DOM，方便单独调试。
-import { OWNER, FONT, THEME, CARD as C } from './config.js';
+import { FONT, THEME, CARD as C } from './config.js';
 
 // 连续拉丁字母数字算一个原子（不拆单词），CJK 逐字为原子。
 // for..of 而非 split('')，才能正确处理 emoji 和代理对。
@@ -116,17 +116,20 @@ export function introLines(state) {
     .filter(Boolean);
 }
 
+const hintBaselineOf = () => QR_Y + C.QR + C.QR_PAD * 2 + 34;
+
 // 卡片高度随自我介绍的行数变化 —— 有多少内容就多高，不留空洞也不硬塞。
+// 一行没写就到二维码提示语为止收尾：卡片上不出现任何使用者没自己填过的身份信息。
 export function cardHeight(state) {
   const n = introLines(state).length;
-  if (!n) return C.H;
-  const hintBaseline = QR_Y + C.QR + C.QR_PAD * 2 + 34;
-  const first = hintBaseline + C.INTRO_GAP_TOP + C.INTRO_GAP_LINE;
+  const hint = hintBaselineOf();
+  if (!n) return Math.round(hint + C.INTRO_BOTTOM);
+  const first = hint + C.INTRO_GAP_TOP + C.INTRO_GAP_LINE;
   return Math.round(first + (n - 1) * C.INTRO_LH + C.INTRO_BOTTOM);
 }
 
 /**
- * 把卡片画进 ctx。ctx 的 canvas 必须是 C.W × C.H。
+ * 把卡片画进 ctx。canvas 的尺寸由本函数自己设定（高度取决于自我介绍写了几行）。
  * state = { img, qrImg, name, line, event, dateStr }
  * img 和 qrImg 都可以为 null —— 缺照片画占位底，缺二维码则文字列占满整宽。
  * 返回这次实际用了什么排版（字号、行数、有没有截断），便于调试和预览标注。
@@ -222,7 +225,7 @@ export function renderCard(ctx, state) {
     info.sceneSize = s.size;
   }
 
-  // ── 底部：写了自我介绍就用它，没写就落回一行署名 ──
+  // ── 底部：写了自我介绍才有这一块 ──
   const dotR = 7;
   const dot = (baseline) => {
     ctx.fillStyle = THEME.mark;
@@ -254,12 +257,6 @@ export function renderCard(ctx, state) {
       ctx.fillStyle = i <= 1 ? THEME.ink : THEME.soft;
       ctx.fillText(f.text, x, baseline);
     });
-  } else {
-    const signBaseline = H - 60;
-    dot(signBaseline);
-    ctx.font = `${C.SIGN_SIZE}px ${FONT}`;
-    ctx.fillStyle = THEME.soft;
-    ctx.fillText(`${OWNER.name} · ${OWNER.org}`, introX, signBaseline);
   }
 
   return info;

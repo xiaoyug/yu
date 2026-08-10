@@ -38,11 +38,12 @@ const PHOTO_LAND = dataURI('photo-land.jpg', 'image/jpeg');
 const PHOTO_PORT = dataURI('photo-port.jpg', 'image/jpeg');
 const QR = dataURI('qr-placeholder.png', 'image/png');
 
-// 活动前写好、整场不变的三行
+// 活动前写好、整场不变的三行。这里只是预览用的示例，
+// 真正的内容由每个使用者在自己手机的 ⚙ 里填，代码里不存任何人的身份信息。
 const INTRO = {
   introWho: 'Sunny，在做 mu · 全球 builder 驻地',
   introInto: '怎么让一群陌生人在三周里长出真实的信任',
-  introReach: '微信 sunnyguo · guo.xiaoyu.work@gmail.com',
+  introReach: '微信 sunnyguo · 邮箱见二维码',
 };
 
 const CASES = [
@@ -83,8 +84,9 @@ const CASES = [
     },
   },
   {
-    label: '⑥ 完全没写自我介绍',
-    note: '落回原来的样子：底部只有一行署名，卡片是 1080×1440。',
+    label: '⑥ 完全没写自我介绍（别人刚装好的样子）',
+    note: '卡片到二维码提示语为止收尾，不署任何名字 —— 代码里不存在「默认是谁」，'
+      + '所以同一个网址分享给别人，他打开就是他自己的工具。',
     state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen' },
   },
   {

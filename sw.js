@@ -1,6 +1,6 @@
 // 现场没网是常态，所以 cache-first：先给缓存，绝不先等网络超时再回落。
 // 改代码后把 CACHE 版本号 +1，否则旧缓存不会更新。
-const CACHE = 'yu-v2';
+const CACHE = 'yu-v3';
 
 const ASSETS = [
   './',
