@@ -45,11 +45,8 @@ python3 -m http.server 8732 --directory tools/yu
 node tools/yu/dev/build-preview.mjs tools/yu/dev/fixtures /tmp/yu-preview.html
 ```
 
-修改缓存资源后递增 `sw.js` 中的 CACHE 版本。提交后，将子目录推到活动分支及 main：
+修改缓存资源后递增 `sw.js` 中的 CACHE 版本（本版为 `yu-v4-mufriends-20261106`）。先测试并提交私有源码，再通过 GitHub Git Data API 将此目录内变更写入基于公开仓库当前 main 的新提交，使用 expected head 校验依次更新活动分支与 main。两个分支指向同一提交。
 
-```bash
-git subtree push --prefix=tools/yu yu mufriends-2026-11-06
-git subtree push --prefix=tools/yu yu main
-```
+历史 README 的 subtree 推送命令依赖旧分支的提交关系；当前主工作区是恢复源码目录后接续，不应直接假设 subtree push 可以快进。后续默认继续用上述 API 发布流程，或先在独立公开仓库 checkout 中同步子目录再正常提交推送。
 
-若通过 GitHub API 发布，也必须基于当前远端 head 创建提交，并检查预期 head 再更新分支，不能覆盖他人改动。Pages 从 `main` 根目录发布；活动分支用于保留活动版本，没有另配 Pages 地址。发布后检查 workflow、线上资源与手机缓存更新。
+Pages 从 `main` 根目录发布；活动分支用于保留活动版本，没有另配 Pages 地址。发布后检查 workflow、线上资源与手机缓存更新。仅发布此工具子目录，不把共享工作区其他文件带入公开仓库。
