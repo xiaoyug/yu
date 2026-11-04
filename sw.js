@@ -1,6 +1,6 @@
 // 现场没网是常态，所以 cache-first：先给缓存，绝不先等网络超时再回落。
 // 改代码后把 CACHE 版本号 +1，否则旧缓存不会更新。
-const CACHE = 'yu-v3';
+const CACHE = 'yu-v4-mufriends-20261106';
 
 const ASSETS = [
   './',
@@ -22,7 +22,7 @@ self.addEventListener('install', (e) => {
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('yu-') && k !== CACHE).map((k) => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });

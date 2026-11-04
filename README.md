@@ -1,118 +1,55 @@
-# 遇
+# 遇 · Yu — MuFriends
 
-活动现场拍一张合影，当场生成一张带二维码的卡片：合影 + 在哪遇见的（活动名 + 日期）+ 一句话 + 我的联系方式二维码。先存进自己相册，再发给对方。
+[打开工具 / Open the app](https://xiaoyug.github.io/yu/)
 
-**线上地址**：https://xiaoyug.github.io/yu/
+为 2026 年 11 月 6 日 MuFriends 准备的中英双语话题卡。活动分支：`mufriends-2026-11-06`；本版同时发布到 `main`。
+A bilingual conversation card for MuFriends on 6 November 2026. This release is available on both the event branch and `main`.
 
----
+## 使用 / Use
 
-## 首次准备（一次性，在家做，5 分钟）
+1. 写下你是谁，以及「你可以找我聊 / Talk to me about」和「我想要聊 / I’d love to talk about」。都可选填，可用中文、英文或两种语言；不会自动翻译填写内容。
+2. 话题卡即时生成，**不用先拍照**。把屏幕给对方看，从共同话题开始聊。
+3. 可上传联系方式二维码、加合影、记下对方称呼和聊到的一句话。
+4. 保存、分享调用系统菜单；保存时选择「存储图像」。网页不能确认你选择了哪个操作。
+5. 「换一张照片」保留本次备注；「下一位朋友」清除照片、对方称呼和本次备注，保留你自己的话题和联系方式。
 
-按顺序做，**顺序很重要**：
+Fill in your name and conversation topics, then show your card. A photo is optional. Add a contact QR code, photo or memory if you like. Save or share through the system menu. “Next person” clears the encounter, while keeping your profile and topics.
 
-1. iPhone Safari 打开线上地址
-2. 分享 → **添加到主屏幕**
-3. ⚠️ **在有网的地方，点开主屏「遇」图标一次**，停留几秒
-4. ⚠️ **在主屏 App 里**（不是 Safari 里）点右上角 ⚙，做两件事：
-   - **上传二维码**：微信 → 我 → 二维码名片 → 保存到相册 → 在相册里编辑 → 裁切 → 正方形，
-     只留二维码本体（去掉头像和昵称）→ 回到「遇」选择图片
-   - **写自我介绍**（下一节）
+活动默认 MuFriends，日期默认 2026-11-06，均可修改；老用户已保存的活动名保留。原来的「对什么感兴趣」自动延续到「我想要聊」。
+The default event and date are editable. Existing profiles, QR codes and event names are preserved; your previous interest becomes “I’d love to talk about”.
 
-第 3、4 步的 ⚠️ 不是啰嗦：**iOS 16.4 之后，主屏 Web App 有一套独立于 Safari 的存储**。在 Safari 里装的离线缓存、传的二维码、写的自我介绍，主屏图标那个 App 都看不到。这两步做错，现场会白屏或者没有码。
+## 离线与数据 / Offline & data
 
-## 分享给别人用
+纯客户端，无账号、业务服务器、第三方运行依赖或构建步骤。信息保存在当前浏览器；照片仅在内存，未导出就离开会丢失。清除浏览器数据会清除设置。
+No account or backend. Your details stay in this browser; photos stay in memory until you export a card. Clearing browser data removes your settings.
 
-直接把网址发给他就行，不用给他建账号，也不用改代码。
+iPhone 建议 Safari 添加到主屏幕，再从主屏幕打开、填写资料。活动前联网打开，确认页脚「已准备好离线使用」。旧版用户联网打开后关闭、重新打开一次以加载新版。不同浏览器或安装模式的数据可能不共享，出发前确认二维码与话题。
+On iPhone, add to Home Screen from Safari, open that app and set up your profile there. Before the event, open online and check “Ready to use offline”. After an update, reopen to load the new version. Verify your details in the browser or installed app you will use.
 
-这个工具**没有服务器、没有账号**，每个人的数据只活在自己手机的浏览器里。代码里不存在「默认是谁」——名字、机构、联系方式、二维码，全部来自使用者自己在 ⚙ 里填的内容。所以同一个网址，你打开是你的工具，他打开是他的工具，互相看不到对方的任何东西。
+GitHub Pages 在部分网络下可能不稳定；首次访问与更新需要联网。iPhone 原生相机、系统分享和微信识码仍应在活动用机上验收。
+Initial access and updates need a connection. Check the camera, share menu and QR recognition on the actual event phone.
 
-他要做的和你当初一样：加到主屏幕 → 联网点开一次 → 在主屏 App 里传自己的二维码、写自己的三行介绍。
+## 开发与发布 / Development & deployment
 
-（一行介绍都没写时，卡片就到二维码为止收尾，不署任何名字——不会莫名其妙印上别人的名字。）
+源码在私有工作区 `sunny-projects/tools/yu/`，公开仓库 `xiaoyug/yu` 是发布副本。仅同步此子目录，不发布工作区内其他内容。
 
-## 自我介绍（每场活动前写一次）
-
-⚙ 里有三行，活动前写好，整场不变，下场活动再改：
-
-| 字段 | 写什么 |
-|---|---|
-| 我是谁 | Sunny，在做 mu · 全球 builder 驻地 |
-| 对什么感兴趣 | 怎么让一群陌生人在三周里长出真实的信任 |
-| 怎么联系我 | 微信 sunnyguo · guo.xiaoyu.work@gmail.com |
-
-三行都是选填，**写了才出现在卡片上**，空的那行直接跳过、卡片跟着变矮（三行 1080×1608 / 两行 1558 / 一行 1508 / 一行没写 1406）。
-
-两个设计上的取舍：
-
-- **卡片上不印标签**。「我是谁 / 对什么感兴趣 / 怎么联系我」只是帮你写的时候别漏项，印在卡上就成了填表感。卡片只呈现你写的那三行本身，措辞完全由你定
-- **一行放不下会截断**，不换行 —— 行数固定卡片高度才可预测。太长时输入框下面会当场提示是哪一行，改短就行
-
-对方称呼放在场景行（「与 Alex · muShenzhen · 2026.08.09」），卡片底部整块留给「我是谁」—— 名字属于「这次相遇」的记录，不和自我介绍抢位置。
-
-## 现场怎么用
-
-到场先在顶部填一次活动名（例：muShenzhen），一晚上只填这一次。日期自动取当天。
-
-然后每遇到一个人：
-
-1. 点「拍合影」→ 选「拍照」→ 按快门 → 使用照片
-2. 卡片预览立刻出现 —— **此刻已经可以直接发了**
-3. 想记点东西就填「称呼」和「一句话」（可以用键盘上的麦克风口述）。**不方便打字就跳过**
-4. 点 **① 存到我的相册** → 在系统面板里选「存储图像」
-5. 点 **② 发给 TA** → 选微信 → 选这个人 → 发送
-
-出发前记得在有网的地方点开一次 App，让它更新缓存。之后现场全程不需要网络。
-
-## 已知限制
-
-- **原始合影不会自动进相册**。通过网页调起的相机拍的照片只进内存，最后落盘的是那张卡。想留没加卡的原片，就先用系统相机 App 拍（自动进相册），再回「遇」里点「拍合影」→ 选「照片图库」
-- **保存和发送是两次操作**。iOS 的分享面板一次只能去一个地方，网页也没法直接写相册 —— 这是平台限制，不是偷懒
-- **二维码只存在这台手机上**。换手机要重传；万一被系统清掉，App 会提示，重传 15 秒
-- **github.io 在大陆裸连不稳**。只影响首次安装和更新，装好之后运行期零网络请求
-- 目前只保 iPhone 竖屏
-
-## 照片去了哪
-
-| 阶段 | 在哪 |
-|---|---|
-| 按快门 | 作为 `File` 交给网页，**不进相册** |
-| 运行期 | 内存里解码 → 画进离屏 canvas，不写磁盘、不上传 |
-| 点 ①/② | 走系统分享面板 —— **唯一的落盘时刻**，去哪由你决定 |
-| 关掉 App | 内存清空，没存过的就没了 |
-
-`localStorage` 里只有三样东西：你的二维码图、活动名、自我介绍那三行。**照片一个字节都不存，也没有任何服务器**。
-
-## 改代码
-
-```
-config.js    版式常量、配色、文案 —— 想调卡片先改这里
-card.js      卡片渲染（纯函数，不碰 DOM）
-app.js       状态机、相机、二维码上传、分享
-index.html   界面 + 内联样式
-sw.js        离线缓存
-dev/         开发用：版式预览生成器、图标生成器、测试素材
-```
-
-看版式效果不用真人照片，用测试素材生成预览页：
+- `index.html`: 双语界面 / bilingual interface
+- `app.js`: 本机设置、照片和分享 / local settings, photos and sharing
+- `card.js`, `config.js`: 话题卡排版与样式 / card rendering and styling
+- `sw.js`: 离线缓存（当前 `yu-v4`）/ offline cache
+- `dev/`: 测试与预览素材 / tests and preview fixtures
 
 ```bash
+npm test --prefix tools/yu
+python3 -m http.server 8732 --directory tools/yu
 node tools/yu/dev/build-preview.mjs tools/yu/dev/fixtures /tmp/yu-preview.html
 ```
 
-本地跑（`localhost` 是 secure context，相机和分享的大部分逻辑能测）：
+修改缓存资源后递增 `sw.js` 中的 CACHE 版本。提交后，将子目录推到活动分支及 main：
 
 ```bash
-python3 -m http.server 8732 --directory tools/yu
-```
-
-## 重新部署
-
-源码真相源在 `sunny-projects/tools/yu/`（私有仓库），公开仓库 `xiaoyug/yu` 只是它的推送副本。
-
-**改完代码，先把 `sw.js` 里的 `CACHE = 'yu-vN'` 版本号 +1**，否则旧缓存不会更新。然后：
-
-```bash
+git subtree push --prefix=tools/yu yu mufriends-2026-11-06
 git subtree push --prefix=tools/yu yu main
 ```
 
-GitHub Pages 一两分钟后自动生效。
+若通过 GitHub API 发布，也必须基于当前远端 head 创建提交，并检查预期 head 再更新分支，不能覆盖他人改动。Pages 从 `main` 根目录发布；活动分支用于保留活动版本，没有另配 Pages 地址。发布后检查 workflow、线上资源与手机缓存更新。

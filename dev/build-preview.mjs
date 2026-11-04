@@ -41,21 +41,22 @@ const QR = dataURI('qr-placeholder.png', 'image/png');
 // 活动前写好、整场不变的三行。这里只是预览用的示例，
 // 真正的内容由每个使用者在自己手机的 ⚙ 里填，代码里不存任何人的身份信息。
 const INTRO = {
-  introWho: 'Sunny，在做 mu · 全球 builder 驻地',
-  introInto: '怎么让一群陌生人在三周里长出真实的信任',
-  introReach: '微信 sunnyguo · 邮箱见二维码',
+  introWho: 'Alex / 社区共建者 · Community builder',
+  introOffer: '城市漫游 / City walks',
+  introInto: '如何让陌生人自然连接 / Helping strangers connect',
+  introReach: 'hello@example.com',
 };
 
 const CASES = [
   {
     label: '① 一句话留空',
     note: '现场最忙的时候直接跳过打字。场景行放大顶上，卡片不留空洞 —— 这是最该先看的一张。',
-    state: { photo: 'land', qr: true, name: 'Alex', line: '', event: 'muShenzhen', ...INTRO },
+    state: { photo: 'land', qr: true, name: 'Alex', line: '', event: 'MuFriends', ...INTRO },
   },
   {
     label: '② 一句话 · 短',
     note: '最常见的状态。上半是「这次相遇」，细线以下是「我是谁」。',
-    state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen', ...INTRO },
+    state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'MuFriends', ...INTRO },
   },
   {
     label: '③ 一句话 · 中等，中英混排',
@@ -63,7 +64,7 @@ const CASES = [
     state: {
       photo: 'port', qr: true, name: '李然',
       line: '你说 Build in Public 最难的是承认还没做出来，这句我记下了',
-      event: 'muShenzhen · Garage', ...INTRO,
+      event: 'MuFriends · Garage', ...INTRO,
     },
   },
   {
@@ -72,7 +73,7 @@ const CASES = [
     state: {
       photo: 'land', qr: true, name: 'Marta',
       line: '我们从深圳的硬件供应链一路聊到你在里斯本那个 co-living 的运营模型，然后发现两边其实是同一个问题：怎么让一群陌生人在三周之内产生真实的信任，而不是停留在交换名片的层面上，这个我回去还想再想想',
-      event: 'muShenzhen', ...INTRO,
+      event: 'MuFriends', ...INTRO,
     },
   },
   {
@@ -80,19 +81,19 @@ const CASES = [
     note: '空的那行直接跳过，卡片跟着变矮 —— 有多少内容就多高。',
     state: {
       photo: 'port', qr: true, name: '', line: '你提到的那本关于城市尺度的书，回头发我',
-      event: 'muShenzhen', introWho: INTRO.introWho, introReach: INTRO.introReach,
+      event: 'MuFriends', introWho: INTRO.introWho, introReach: INTRO.introReach,
     },
   },
   {
     label: '⑥ 完全没写自我介绍（别人刚装好的样子）',
     note: '卡片到二维码提示语为止收尾，不署任何名字 —— 代码里不存在「默认是谁」，'
       + '所以同一个网址分享给别人，他打开就是他自己的工具。',
-    state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen' },
+    state: { photo: 'land', qr: true, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'MuFriends' },
   },
   {
     label: '⑦ 还没上传二维码（兜底）',
     note: '现场绝不因为缺码而卡住出卡。',
-    state: { photo: 'land', qr: false, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'muShenzhen', ...INTRO },
+    state: { photo: 'land', qr: false, name: 'Alex', line: '聊到你在做的地铁噪音项目', event: 'MuFriends', ...INTRO },
   },
 ];
 
@@ -176,7 +177,7 @@ const html = `<meta charset="utf-8">
     <ul>
       <li>细线以下那三行 —— 轻重排得对不对（我是谁最重，对什么感兴趣次之，联系方式最轻）</li>
       <li>三行的措辞是不是你想说的话。<strong>卡片上不印标签</strong>，写什么就是什么</li>
-      <li>称呼从署名行挪到了场景行：「与 Alex · muShenzhen · 2026.08.09」。这样名字属于「这次相遇」，
+      <li>称呼从署名行挪到了场景行：「与 Alex · MuFriends · 2026.08.09」。这样名字属于「这次相遇」，
           卡片底部整块留给「我是谁」，不重复出现两个 Sunny</li>
       <li>卡片随介绍行数长高（⑤ 只写两行就矮一截，⑥ 一行没写就退回原来的 1080×1440）</li>
       <li><strong>最后一节</strong>：二维码在微信缩略图尺寸下够不够大</li>

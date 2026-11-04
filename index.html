@@ -2,224 +2,56 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<title>遇</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>遇 · MuFriends / Let’s talk</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="遇">
+<meta name="apple-mobile-web-app-title" content="遇 · Yu">
 <meta name="theme-color" content="#F6F1E7">
 <link rel="apple-touch-icon" href="assets/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 <style>
-  :root {
-    --bg: #f6f1e7;
-    --panel: #fffdf8;
-    --ink: #24211f;
-    --soft: #8a857c;
-    --accent: #c4552a;
-    --accent-soft: #f3e2d8;
-    --line: rgba(36,33,31,.12);
-    --r: 14px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    background: var(--bg); color: var(--ink);
-    font-family: "PingFang SC", -apple-system, system-ui, "Noto Sans SC", sans-serif;
-    line-height: 1.6;
-    padding: 0 16px calc(24px + env(safe-area-inset-bottom));
-    max-width: 560px; margin: 0 auto;
-  }
-
-  /* ── 顶栏：活动名一次设置，管一整晚 ── */
-  header {
-    display: flex; align-items: center; gap: 10px;
-    padding: calc(12px + env(safe-area-inset-top)) 0 12px;
-  }
-  #event {
-    flex: 1; min-width: 0;
-    font: inherit; font-size: 16px; font-weight: 600;
-    background: var(--panel); color: var(--ink);
-    border: 1px solid var(--line); border-radius: 99px;
-    padding: 9px 16px; outline: none;
-  }
-  #event::placeholder { color: var(--soft); font-weight: 400; }
-  #event:focus { border-color: var(--accent); }
-  .icon-btn {
-    flex: none; width: 40px; height: 40px; border-radius: 99px;
-    background: var(--panel); border: 1px solid var(--line);
-    color: var(--soft); font-size: 17px; line-height: 1;
-    display: grid; place-items: center; cursor: pointer;
-  }
-  .icon-btn:focus-visible, #event:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  /* ── 提示条 ── */
-  .banner {
-    display: none; gap: 10px; align-items: flex-start;
-    background: var(--accent-soft); color: var(--accent);
-    border-radius: var(--r); padding: 11px 14px; font-size: 13.5px;
-    margin-bottom: 12px;
-  }
-  .banner.show { display: flex; }
-  .banner button {
-    font: inherit; font-size: 13.5px; font-weight: 600;
-    background: none; border: none; color: var(--accent);
-    text-decoration: underline; cursor: pointer; padding: 0; flex: none;
-  }
-
-  /* ── 拍照热区：整块可点，站着单手能按 ── */
-  .shoot {
-    display: grid; place-items: center; gap: 6px;
-    height: 132px; border-radius: var(--r);
-    border: 2px dashed rgba(36,33,31,.22); background: var(--panel);
-    color: var(--soft); font-size: 15px; cursor: pointer; text-align: center;
-  }
-  .shoot strong { font-size: 17px; color: var(--ink); font-weight: 600; }
-  .shoot:active { background: #f6efe3; }
-  .shoot.compact { height: 52px; border-style: solid; border-width: 1px; }
-  .shoot.compact strong { font-size: 15px; }
-  .shoot.compact span { display: none; }
-
-  /* ── 卡片预览 ── */
-  #stage { display: none; margin-top: 14px; }
-  #stage.show { display: block; }
-  #preview {
-    width: 100%; display: block; border-radius: 10px;
-    box-shadow: 0 1px 2px rgba(36,33,31,.1), 0 14px 30px -14px rgba(36,33,31,.4);
-  }
-  .savehint { font-size: 12.5px; color: var(--soft); text-align: center; margin-top: 8px; }
-
-  /* ── 输入 ── */
-  .fields { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-  .field label {
-    display: block; font-size: 12.5px; color: var(--soft); margin-bottom: 4px;
-    letter-spacing: .02em;
-  }
-  .field input {
-    width: 100%; font: inherit; font-size: 16px;  /* ≥16px 防止 iOS 聚焦时放大 */
-    background: var(--panel); color: var(--ink);
-    border: 1px solid var(--line); border-radius: 12px;
-    padding: 11px 14px; outline: none;
-  }
-  .field input:focus { border-color: var(--accent); }
-  .field input::placeholder { color: #b9b2a6; }
-
-  /* ── 主按钮 ── */
-  .actions { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-  .btn {
-    font: inherit; font-size: 17px; font-weight: 600;
-    border: 1px solid var(--line); border-radius: 14px;
-    padding: 15px; cursor: pointer; text-align: center;
-    background: var(--panel); color: var(--ink);
-  }
-  .btn:active { transform: scale(.99); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn:disabled { opacity: .4; cursor: default; }
-  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { .btn:active { transform: none; } }
-
-  /* ── 设置：上传我的二维码 ── */
-  #setup {
-    display: none; background: var(--panel); border: 1px solid var(--line);
-    border-radius: var(--r); padding: 18px; margin-bottom: 14px;
-  }
-  #setup.show { display: block; }
-  #setup h2 { font-size: 16px; margin-bottom: 6px; }
-  #setup p { font-size: 13.5px; color: var(--soft); margin-bottom: 14px; }
-  #setup ol { font-size: 13.5px; color: var(--soft); margin: 0 0 14px 18px; }
-  #setup li { margin: 3px 0; }
-  #setup .rule { border: 0; border-top: 1px solid var(--line); margin: 20px 0 18px; }
-  .tip { font-size: 12.5px; color: var(--accent); margin: 10px 0 0 !important; min-height: 1em; }
-  .qrrow { display: flex; gap: 14px; align-items: center; }
-  #qrThumb {
-    width: 84px; height: 84px; flex: none; border-radius: 10px;
-    border: 1px solid var(--line); background: #fff; object-fit: contain; display: none;
-  }
-  #qrThumb.show { display: block; }
-  .hidden-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
-  footer { text-align: center; color: var(--soft); font-size: 12px; padding: 26px 0 4px; }
+:root{--bg:#f6f1e7;--panel:#fffdf8;--ink:#24211f;--soft:#746e65;--accent:#b44828;--line:rgba(36,33,31,.16)}
+*{box-sizing:border-box}body{margin:0 auto;padding:24px 18px calc(30px + env(safe-area-inset-bottom));max-width:560px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;line-height:1.55}h1,h2,p{margin:0}header{display:flex;align-items:center;justify-content:space-between;margin:12px 0 24px}h1{font-size:30px;letter-spacing:-1px}.eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--accent)}.subtitle{color:var(--soft);font-size:14px;margin-top:6px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}.field{margin-bottom:18px}.field:last-child{margin-bottom:0}label{display:block;font-size:15px;font-weight:600;margin-bottom:7px}label span{display:block;font-size:12px;color:var(--soft);font-weight:400}input,textarea,button{font:inherit}input,textarea{width:100%;min-width:0;background:transparent;border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--ink);font-size:16px}textarea{resize:vertical;min-height:90px}input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:2px}input::placeholder,textarea::placeholder{color:#938b80}.event-row{display:grid;grid-template-columns:1fr 155px;gap:12px}.event-row .field{margin-bottom:0}.topic label{color:var(--accent)}.hint{font-size:12px;color:var(--soft);margin:10px 0}.btn{display:block;width:100%;padding:13px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-weight:600;text-align:center;cursor:pointer;text-decoration:none}.btn.primary{color:#fff;background:var(--accent);border-color:var(--accent)}.btn:disabled{opacity:.45;cursor:wait}.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.icon-btn{width:auto;padding:10px 14px;font-size:13px}.actions{display:grid;gap:10px;margin-top:16px}h2{font-size:18px;margin-bottom:12px}summary{cursor:pointer;font-weight:600}details .field{margin-top:16px}.qrrow{display:flex;align-items:center;gap:14px;margin:12px 0}.qrrow img{width:76px;height:76px;object-fit:contain}.qrrow img:not([src]){display:none}[hidden]{display:none!important}.hidden-input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}#preview{display:block;width:100%;border-radius:12px;box-shadow:0 6px 22px #24211f12}#stage{margin-top:26px}.section-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}.section-top h2{margin:0}.small{font-size:12px;color:var(--soft)}#status{min-height:20px}footer{font-size:12px;text-align:center;color:var(--soft);margin-top:28px}.photo-actions{display:flex;gap:8px;margin-top:12px}.photo-actions .btn{font-size:13px}#storageNotice{padding:12px;border:1px solid var(--accent);border-radius:10px}.preview-link{font-size:13px;color:var(--accent)}@media(max-width:360px){.event-row{grid-template-columns:1fr}body{padding-left:12px;padding-right:12px}}
 </style>
 </head>
 <body>
-
-<header>
-  <input id="event" type="text" placeholder="活动名（例：muShenzhen）" autocomplete="off" enterkeyhint="done">
-  <button class="icon-btn" id="gear" type="button" aria-label="设置我的二维码">⚙</button>
-</header>
-
-<div class="banner" id="noqr">
-  <span>还没上传你的二维码，卡片上会空着。</span>
-  <button type="button" id="noqrFix">现在上传</button>
-</div>
-
-<section id="setup">
-  <h2>我的二维码</h2>
-  <p>放在卡片右下角，对方长按就能识别。只存在这台手机上，不会上传到任何服务器。</p>
-  <ol>
-    <li>微信 → 我 → 二维码名片 → 保存到相册</li>
-    <li>在相册里裁成正方形，只留二维码本体</li>
-    <li>回到这里上传</li>
-  </ol>
-  <div class="qrrow">
-    <img id="qrThumb" alt="我的二维码">
-    <button class="btn" id="pickQR" type="button" style="flex:1">选择图片</button>
-  </div>
-
-  <hr class="rule">
-
-  <h2>我的自我介绍</h2>
-  <p>活动前写好，整场不变，下场活动再改。三行都是选填 —— 写了才出现在卡片上。
-     标签只是帮你别漏项，卡片上不会印出来。和二维码一样，只存在这台手机上。</p>
-  <div class="fields">
-    <div class="field">
-      <label for="introWho">我是谁</label>
-      <input id="introWho" type="text" autocomplete="off"
-             placeholder="你的名字，和你在做的事">
-    </div>
-    <div class="field">
-      <label for="introInto">对什么感兴趣</label>
-      <input id="introInto" type="text" autocomplete="off"
-             placeholder="你最近在琢磨的一个问题">
-    </div>
-    <div class="field">
-      <label for="introReach">怎么联系我</label>
-      <input id="introReach" type="text" autocomplete="off"
-             placeholder="微信号 / 邮箱 / Telegram">
-    </div>
-  </div>
-  <p class="tip" id="introTip"></p>
+<header><div><p class="eyebrow">MUFRIENDS · 06 NOV 2026</p><h1>遇 · Let’s talk</h1><p class="subtitle">带着一个话题，认识一个新朋友。<br>One topic. A new connection.</p></div></header>
+<p id="storageNotice" hidden role="status"></p>
+<section class="panel event-row" aria-label="活动 / Event">
+<div class="field"><label for="event">活动 <span>Event</span></label><input id="event" maxlength="60" placeholder="MuFriends"></div>
+<div class="field"><label for="date">日期 <span>Date</span></label><input id="date" type="date"></div>
 </section>
-
-<label class="shoot" id="shoot" for="photo">
-  <strong>点这里拍合影</strong>
-  <span>会打开系统相机，也可以从相册选</span>
-</label>
-<input class="hidden-input" id="photo" type="file" accept="image/*">
-<input class="hidden-input" id="qrFile" type="file" accept="image/*">
-
-<div id="stage">
-  <img id="preview" alt="卡片预览">
-  <p class="savehint" id="savehint"></p>
-
-  <div class="fields">
-    <div class="field">
-      <label for="who">称呼（选填）</label>
-      <input id="who" type="text" placeholder="Alex" autocomplete="off" enterkeyhint="next">
-    </div>
-    <div class="field">
-      <label for="line">一句话（选填，可以用键盘上的麦克风口述）</label>
-      <input id="line" type="text" placeholder="聊到你在做的地铁噪音项目" autocomplete="off" enterkeyhint="done">
-    </div>
-  </div>
-
-  <div class="actions">
-    <button class="btn primary" id="save" type="button">① 存到我的相册</button>
-    <button class="btn" id="send" type="button">② 发给 TA</button>
-  </div>
-</div>
-
-<footer>遇 · 拍一张，记住是在哪遇见的</footer>
-
+<section class="panel" aria-label="我的话题 / My topics">
+<div class="field"><label for="introWho">我是谁 <span>My name / A little about me</span></label><input id="introWho" maxlength="120" placeholder="名字，以及你在做的事 / Name & what you do" autocomplete="name"></div>
+<div class="field topic"><label for="introOffer">你可以找我聊…… <span>Talk to me about…</span></label><textarea id="introOffer" maxlength="300" placeholder="你熟悉、喜欢或愿意分享的事 / Something you know, enjoy or can share"></textarea></div>
+<div class="field topic"><label for="introInto">我想要聊…… <span>I’d love to talk about…</span></label><textarea id="introInto" maxlength="300" placeholder="最近好奇的问题，或想认识的人 / A question you’re exploring or people you’d like to meet"></textarea></div>
+<p class="hint">都可以选填，用中文、英文或两种语言写。<br>All optional. Write in Chinese, English, or both.</p>
+<a class="preview-link" href="#stage">看看我的话题卡 ↓ / See my card ↓</a>
+</section>
+<details class="panel" id="setup"><summary>联系方式与二维码 / Contact & QR code</summary>
+<p class="hint">上传微信或其他联系方式的二维码，请只保留二维码区域。<br>Upload your WeChat or other contact QR code, cropped to the code.</p>
+<div class="qrrow"><img id="qrThumb" alt="我的二维码 / My QR code"><button class="btn" id="pickQR" type="button">选择二维码 / Choose QR image</button></div>
+<input class="hidden-input" id="qrFile" type="file" accept="image/*" aria-label="二维码图片 / QR image">
+<div class="field"><label for="introReach">怎么联系我 <span>Contact me</span></label><input id="introReach" maxlength="180" placeholder="微信 / WeChat · Email · Telegram"></div>
+<p class="hint">信息只存在当前浏览器，不会上传。<br>Your details stay in this browser. Nothing is uploaded.</p>
+</details>
+<section id="stage" aria-label="话题卡预览 / Card preview">
+<div class="section-top"><h2>我的话题卡 <span class="small">My conversation card</span></h2></div>
+<img id="preview" alt="话题卡预览 / Conversation card preview">
+<p class="hint">把屏幕给对方看，从你们都感兴趣的话题聊起。<br>Show your card and start with something you both care about.</p>
+<label class="btn" for="photo" id="shoot">加一张合影（选填）/ Add a photo (optional)</label>
+<input class="hidden-input" id="photo" type="file" accept="image/*" aria-label="合影 / Photo">
+<div class="photo-actions" id="photoActions" hidden><button class="btn" id="removePhoto" type="button">去掉照片 / Remove photo</button><button class="btn" id="newEncounter" type="button">下一位朋友 / Next person</button></div>
+<details class="panel" style="margin-top:14px"><summary>记下这次相遇（选填）/ Add a memory (optional)</summary>
+<div class="field"><label for="who">对方称呼 <span>Their name</span></label><input id="who" maxlength="80" autocomplete="off"></div>
+<div class="field"><label for="line">聊到的一句话 <span>Something we talked about</span></label><textarea id="line" maxlength="300"></textarea></div>
+</details>
+<div class="actions"><button class="btn primary" id="save" type="button" disabled>① 保存卡片 / Save card</button><button class="btn" id="send" type="button" disabled>② 分享给朋友 / Share with a friend</button></div>
+<p class="hint" id="status" role="status" aria-live="polite"></p>
+<p class="hint">保存会打开系统菜单，请选择“存储图像”。<br>To save, choose “Save Image” in the system menu.</p>
+</section>
+<footer>遇 · 把相遇留下来 / Yu · Remember the connection<br><span id="offlineStatus">离线准备中 / Preparing offline access…</span><br>MuFriends · v4</footer>
 <script type="module" src="app.js"></script>
 </body>
 </html>

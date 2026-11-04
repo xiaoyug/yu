@@ -1,0 +1,6 @@
+{
+  "name": "yu-mufriends",
+  "private": true,
+  "type": "module",
+  "scripts": { "test": "node --test dev/*.test.mjs" }
+}
