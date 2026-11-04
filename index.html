@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>遇 · MuFriends / Let’s talk</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="遇 · Yu">
+<meta name="theme-color" content="#F6F1E7">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#f6f1e7;--panel:#fffdf8;--ink:#24211f;--soft:#746e65;--accent:#b44828;--line:rgba(36,33,31,.16)}
+*{box-sizing:border-box}body{margin:0 auto;padding:24px 18px calc(30px + env(safe-area-inset-bottom));max-width:560px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;line-height:1.55}h1,h2,p{margin:0}header{display:flex;align-items:center;justify-content:space-between;margin:12px 0 24px}h1{font-size:30px;letter-spacing:-1px}.eyebrow{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--accent)}.subtitle{color:var(--soft);font-size:14px;margin-top:6px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}.field{margin-bottom:18px}.field:last-child{margin-bottom:0}label{display:block;font-size:15px;font-weight:600;margin-bottom:7px}label span{display:block;font-size:12px;color:var(--soft);font-weight:400}input,textarea,button{font:inherit}input,textarea{width:100%;min-width:0;background:transparent;border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--ink);font-size:16px}textarea{resize:vertical;min-height:90px}input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:2px}input::placeholder,textarea::placeholder{color:#938b80}.event-row{display:grid;grid-template-columns:1fr 155px;gap:12px}.event-row .field{margin-bottom:0}.topic label{color:var(--accent)}.hint{font-size:12px;color:var(--soft);margin:10px 0}.btn{display:block;width:100%;padding:13px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--ink);font-size:15px;font-weight:600;text-align:center;cursor:pointer;text-decoration:none}.btn.primary{color:#fff;background:var(--accent);border-color:var(--accent)}.btn:disabled{opacity:.45;cursor:wait}.btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}.icon-btn{width:auto;padding:10px 14px;font-size:13px}.actions{display:grid;gap:10px;margin-top:16px}h2{font-size:18px;margin-bottom:12px}summary{cursor:pointer;font-weight:600}details .field{margin-top:16px}.qrrow{display:flex;align-items:center;gap:14px;margin:12px 0}.qrrow img{width:76px;height:76px;object-fit:contain}.qrrow img:not([src]){display:none}[hidden]{display:none!important}.hidden-input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}#preview{display:block;width:100%;border-radius:12px;box-shadow:0 6px 22px #24211f12}#stage{margin-top:26px}.section-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}.section-top h2{margin:0}.small{font-size:12px;color:var(--soft)}#status{min-height:20px}footer{font-size:12px;text-align:center;color:var(--soft);margin-top:28px}.photo-actions{display:flex;gap:8px;margin-top:12px}.photo-actions .btn{font-size:13px}#storageNotice{padding:12px;border:1px solid var(--accent);border-radius:10px}.preview-link{font-size:13px;color:var(--accent)}@media(max-width:360px){.event-row{grid-template-columns:1fr}body{padding-left:12px;padding-right:12px}}
+</style>
+</head>
+<body>
+<header><div><p class="eyebrow">MUFRIENDS · 06 NOV 2026</p><h1>遇 · Let’s talk</h1><p class="subtitle">带着一个话题，认识一个新朋友。<br>One topic. A new connection.</p></div></header>
+<p id="storageNotice" hidden role="status"></p>
+<section class="panel event-row" aria-label="活动 / Event">
+<div class="field"><label for="event">活动 <span>Event</span></label><input id="event" maxlength="60" placeholder="MuFriends"></div>
+<div class="field"><label for="date">日期 <span>Date</span></label><input id="date" type="date"></div>
+</section>
+<section class="panel" aria-label="我的话题 / My topics">
+<div class="field"><label for="introWho">我是谁 <span>My name / A little about me</span></label><input id="introWho" maxlength="120" placeholder="名字，以及你在做的事 / Name & what you do" autocomplete="name"></div>
+<div class="field topic"><label for="introOffer">你可以找我聊…… <span>Talk to me about…</span></label><textarea id="introOffer" maxlength="300" placeholder="你熟悉、喜欢或愿意分享的事 / Something you know, enjoy or can share"></textarea></div>
+<div class="field topic"><label for="introInto">我想要聊…… <span>I’d love to talk about…</span></label><textarea id="introInto" maxlength="300" placeholder="最近好奇的问题，或想认识的人 / A question you’re exploring or people you’d like to meet"></textarea></div>
+<p class="hint">都可以选填，用中文、英文或两种语言写。<br>All optional. Write in Chinese, English, or both.</p>
+<a class="preview-link" href="#stage">看看我的话题卡 ↓ / See my card ↓</a>
+</section>
+<details class="panel" id="setup"><summary>联系方式与二维码 / Contact & QR code</summary>
+<p class="hint">上传微信或其他联系方式的二维码，请只保留二维码区域。<br>Upload your WeChat or other contact QR code, cropped to the code.</p>
+<div class="qrrow"><img id="qrThumb" alt="我的二维码 / My QR code"><button class="btn" id="pickQR" type="button">选择二维码 / Choose QR image</button></div>
+<input class="hidden-input" id="qrFile" type="file" accept="image/*" aria-label="二维码图片 / QR image">
+<div class="field"><label for="introReach">怎么联系我 <span>Contact me</span></label><input id="introReach" maxlength="180" placeholder="微信 / WeChat · Email · Telegram"></div>
+<p class="hint">信息只存在当前浏览器，不会上传。<br>Your details stay in this browser. Nothing is uploaded.</p>
+</details>
+<section id="stage" aria-label="话题卡预览 / Card preview">
+<div class="section-top"><h2>我的话题卡 <span class="small">My conversation card</span></h2></div>
+<img id="preview" alt="话题卡预览 / Conversation card preview">
+<p class="hint">把屏幕给对方看，从你们都感兴趣的话题聊起。<br>Show your card and start with something you both care about.</p>
+<label class="btn" for="photo" id="shoot">加一张合影（选填）/ Add a photo (optional)</label>
+<input class="hidden-input" id="photo" type="file" accept="image/*" aria-label="合影 / Photo">
+<div class="photo-actions" id="photoActions" hidden><button class="btn" id="removePhoto" type="button">去掉照片 / Remove photo</button><button class="btn" id="newEncounter" type="button">下一位朋友 / Next person</button></div>
+<details class="panel" style="margin-top:14px"><summary>记下这次相遇（选填）/ Add a memory (optional)</summary>
+<div class="field"><label for="who">对方称呼 <span>Their name</span></label><input id="who" maxlength="80" autocomplete="off"></div>
+<div class="field"><label for="line">聊到的一句话 <span>Something we talked about</span></label><textarea id="line" maxlength="300"></textarea></div>
+</details>
+<div class="actions"><button class="btn primary" id="save" type="button" disabled>① 保存卡片 / Save card</button><button class="btn" id="send" type="button" disabled>② 分享给朋友 / Share with a friend</button></div>
+<p class="hint" id="status" role="status" aria-live="polite"></p>
+<p class="hint">保存会打开系统菜单，请选择“存储图像”。<br>To save, choose “Save Image” in the system menu.</p>
+</section>
+<footer>遇 · 把相遇留下来 / Yu · Remember the connection<br><span id="offlineStatus">离线准备中 / Preparing offline access…</span><br>MuFriends · v4</footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>
