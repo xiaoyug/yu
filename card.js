@@ -59,8 +59,8 @@ export function introLines(state) {
 }
 
 function layout(ctx, state) {
-  const blocks = [];
-  let y = state.img ? C.PHOTO_H + 64 : 80;
+  const blocks = [], topics = [];
+  let y = state.img ? C.PHOTO_H + 354 : 280;
   const add = (text, size, color, weight = '400', width = C.W - C.PAD * 2) => {
     if (!text) return;
     ctx.font = `${weight} ${size}px ${FONT}`;
@@ -77,10 +77,13 @@ function layout(ctx, state) {
   ]) {
     const value = (state[key] || '').trim();
     if (!value) continue;
-    y += 38;
+    y += 54;
+    const topicTop = y - 14;
     add(label, 28, THEME.accent, '600');
     y += 14;
     add(value, 42, THEME.ink);
+    topics.push({y: topicTop, height: y - topicTop + 18, color: key === 'introOffer' ? '#F9F463' : '#A7D6F5'});
+    y += 22;
   }
   if (state.name || state.line) {
     y += 38;
@@ -91,7 +94,8 @@ function layout(ctx, state) {
   if (state.introReach) { y += 36; add(state.introReach, 28, THEME.soft); }
   const qrY = y + 40;
   const height = Math.ceil(state.qrImg ? qrY + C.QR + 96 : y + 64);
-  return {blocks, qrY, height};
+  const artY = height;
+  return {blocks, topics, qrY, artY, height: height + 220};
 }
 
 export function cardHeight(state, ctx) {
@@ -104,7 +108,26 @@ export function renderCard(ctx, state) {
   ctx.canvas.height = result.height;
   ctx.fillStyle = THEME.bg;
   ctx.fillRect(0, 0, C.W, result.height);
-  if (state.img) drawCover(ctx, state.img, 0, 0, C.W, C.PHOTO_H, C.FOCUS_Y);
+  // Brand header stays separate from faces and the contact QR.
+  if (state.logoImg) ctx.drawImage(state.logoImg, 154, 335, 693, 329, 766, 50, 250, 119);
+  ctx.textBaseline = 'top'; ctx.textAlign = 'left';
+  ctx.fillStyle = THEME.ink; ctx.font = `italic 800 92px ${FONT}`;
+  ctx.fillText('MuFriends', C.PAD, 62);
+  ctx.fillStyle = '#ED78C9'; ctx.fillRect(C.PAD, 184, 108, 14);
+  ctx.fillStyle = '#F7ED32'; ctx.fillRect(C.PAD + 122, 184, 108, 14);
+  ctx.fillStyle = '#28A9D6'; ctx.fillRect(C.PAD + 244, 184, 108, 14);
+  if (state.img) {
+    ctx.fillStyle = THEME.ink;
+    ctx.fillRect(C.PAD - 3, 247, C.W - C.PAD * 2 + 6, C.PHOTO_H + 6);
+    drawCover(ctx, state.img, C.PAD, 250, C.W - C.PAD * 2, C.PHOTO_H, C.FOCUS_Y);
+  }
+  for (const topic of result.topics) {
+    ctx.fillStyle = THEME.ink;
+    ctx.fillRect(C.PAD - 20, topic.y - 2, C.W - C.PAD * 2 + 40, topic.height + 4);
+    ctx.fillStyle = topic.color;
+    ctx.fillRect(C.PAD - 18, topic.y, C.W - C.PAD * 2 + 36, topic.height);
+  }
+  if (state.artImg) ctx.drawImage(state.artImg, C.PAD, result.artY, C.W - C.PAD * 2, 210);
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
   for (const block of result.blocks) {
@@ -122,5 +145,5 @@ export function renderCard(ctx, state) {
     ctx.textAlign = 'center';
     ctx.fillText(C.HINT, C.W / 2, result.qrY + C.QR + 28);
   }
-  return {height: result.height, introCount: introLines(state).length, introTruncated: []};
+  return {hasQR: !!state.qrImg, height: result.height, introCount: introLines(state).length, introTruncated: []};
 }

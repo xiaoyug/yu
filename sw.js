@@ -1,6 +1,6 @@
 // 现场没网是常态，所以 cache-first：先给缓存，绝不先等网络超时再回落。
 // 改代码后把 CACHE 版本号 +1，否则旧缓存不会更新。
-const CACHE = 'yu-v4-mufriends-20261106';
+const CACHE = 'yu-v5-mufriends-brand';
 
 const ASSETS = [
   './',
@@ -9,6 +9,8 @@ const ASSETS = [
   './card.js',
   './config.js',
   './manifest.webmanifest',
+  './assets/mushenzhen-logo.png',
+  './assets/friends-art.svg',
   './assets/icon-180.png',
   './assets/icon-192.png',
   './assets/icon-512.png',

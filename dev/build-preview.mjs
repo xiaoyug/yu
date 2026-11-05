@@ -37,6 +37,8 @@ const dataURI = (file, mime) =>
 const PHOTO_LAND = dataURI('photo-land.jpg', 'image/jpeg');
 const PHOTO_PORT = dataURI('photo-port.jpg', 'image/jpeg');
 const QR = dataURI('qr-placeholder.png', 'image/png');
+const LOGO = 'data:image/png;base64,' + readFileSync(join(ROOT, 'assets/mushenzhen-logo.png')).toString('base64');
+const ART = 'data:image/svg+xml;base64,' + readFileSync(join(ROOT, 'assets/friends-art.svg')).toString('base64');
 
 // 活动前写好、整场不变的三行。这里只是预览用的示例，
 // 真正的内容由每个使用者在自己手机的 ⚙ 里填，代码里不存任何人的身份信息。
@@ -221,15 +223,16 @@ function load(src) {
 
 (async () => {
   const [land, port, qr] = await Promise.all([load(ASSETS.land), load(ASSETS.port), load(ASSETS.qr)]);
+  const [logoImg, artImg] = await Promise.all([load(${JSON.stringify(LOGO)}), load(${JSON.stringify(ART)})]);
   const photos = { land, port };
-  const dateStr = DATE || formatDate(new Date());
+  const dateStr = DATE || '2026.11.06';
   const host = document.getElementById('cards');
   let first = null;
 
   for (const c of CASES) {
     const canvas = document.createElement('canvas');
     const info = renderCard(canvas.getContext('2d'), {
-      ...c.state,
+      ...c.state, logoImg, artImg,
       img: photos[c.state.photo],
       qrImg: c.state.qr ? qr : null,
       dateStr,
@@ -251,7 +254,7 @@ function load(src) {
     const meta = document.createElement('p');
     meta.className = 'meta';
     const bits = [CARD.W + ' × ' + info.height];
-    bits.push('一句话 ' + (info.lineSize ? info.lineSize + 'px · ' + info.lineCount + ' 行' : '（空）'));
+    bits.push('相遇备注：' + (c.state.line ? '有' : '无'));
     bits.push('自我介绍 ' + info.introCount + ' 行');
     if (info.truncated) bits.push('一句话已截断');
     if (info.introTruncated.length) bits.push('介绍第 ' + info.introTruncated.map((i) => i + 1).join('/') + ' 行已截断');

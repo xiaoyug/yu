@@ -36,7 +36,7 @@ Initial access and updates need a connection. Check the camera, share menu and Q
 - `index.html`: 双语界面 / bilingual interface
 - `app.js`: 本机设置、照片和分享 / local settings, photos and sharing
 - `card.js`, `config.js`: 话题卡排版与样式 / card rendering and styling
-- `sw.js`: 离线缓存（当前 `yu-v4`）/ offline cache
+- `sw.js`: 离线缓存（当前 `yu-v5-mufriends-brand`）/ offline cache
 - `dev/`: 测试与预览素材 / tests and preview fixtures
 
 ```bash
@@ -45,8 +45,12 @@ python3 -m http.server 8732 --directory tools/yu
 node tools/yu/dev/build-preview.mjs tools/yu/dev/fixtures /tmp/yu-preview.html
 ```
 
-修改缓存资源后递增 `sw.js` 中的 CACHE 版本（本版为 `yu-v4-mufriends-20261106`）。先测试并提交私有源码，再通过 GitHub Git Data API 将此目录内变更写入基于公开仓库当前 main 的新提交，使用 expected head 校验依次更新活动分支与 main。两个分支指向同一提交。
+修改缓存资源后递增 `sw.js` 中的 CACHE 版本（本版为 `yu-v5-mufriends-brand`）。先测试并提交私有源码，再通过 GitHub Git Data API 将此目录内变更写入基于公开仓库当前 main 的新提交，使用 expected head 校验依次更新活动分支与 main。两个分支指向同一提交。
 
 历史 README 的 subtree 推送命令依赖旧分支的提交关系；当前主工作区是恢复源码目录后接续，不应直接假设 subtree push 可以快进。后续默认继续用上述 API 发布流程，或先在独立公开仓库 checkout 中同步子目录再正常提交推送。
 
 Pages 从 `main` 根目录发布；活动分支用于保留活动版本，没有另配 Pages 地址。发布后检查 workflow、线上资源与手机缓存更新。仅发布此工具子目录，不把共享工作区其他文件带入公开仓库。
+
+## 品牌视觉 / Brand design
+
+页面与导出卡片使用用户提供的 muShenzhen 黑色透明 logo 原图（assets/mushenzhen-logo.png），以白底、黑字、黄蓝话题色块和原创 SVG 人物插画呼应 Human Flourishing 海报。参考海报的其他活动日期不用于本活动。Logo 与插画一并离线缓存；资源未就绪时禁用导出，避免分享缺 logo 的卡片。

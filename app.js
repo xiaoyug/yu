@@ -19,6 +19,7 @@ $('date').value = read(KEY.date) || '2026-11-06';
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext('2d');
 const state = { img: null, qrImg: null, photoURL: null, previewURL: null, file: null };
+let brandReady = false;
 let version = 0, timer, photoRequest = 0, qrRequest = 0, photoPending = false;
 const decode = src => new Promise((resolve, reject) => {
   const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = src;
@@ -41,7 +42,7 @@ function render() {
     state.previewURL = URL.createObjectURL(blob);
     $('preview').src = state.previewURL;
     if (previous) URL.revokeObjectURL(previous);
-    buttons(!photoPending);
+    buttons(!photoPending && brandReady);
   }, CARD.MIME, CARD.QUALITY);
 }
 function schedule() {
@@ -143,3 +144,11 @@ if ('serviceWorker' in navigator) {
     $('offlineStatus').textContent = '离线准备未完成，请联网后重新打开 / Offline setup incomplete. Reopen while online.';
   });
 } else $('offlineStatus').textContent = '此浏览器不支持离线使用 / Offline access is unavailable in this browser';
+
+// Decode the original logo and self-contained illustration before enabling export.
+Promise.all([decode('./assets/mushenzhen-logo.png'), decode('./assets/friends-art.svg')])
+  .then(([logoImg, artImg]) => {
+    state.logoImg = logoImg; state.artImg = artImg; brandReady = true; render();
+  }).catch(() => {
+    $('status').textContent = '品牌图片未加载，请联网后重新打开。 / Brand images could not load. Reopen while online.';
+  });

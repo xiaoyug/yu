@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="250" viewBox="0 0 1000 250">
+<g fill="none" stroke="#dedede" stroke-width="5" stroke-linecap="round" stroke-dasharray="5 13"><path d="M20 210C160 90 230 245 355 155S540 70 680 155 850 230 980 65"/></g>
+<g fill="#080808" font-family="Arial,sans-serif" font-weight="700" font-style="italic"><text x="208" y="195" font-size="156" transform="rotate(-9 208 195)">h</text><text x="566" y="180" font-size="164" transform="rotate(9 566 180)">i</text><text x="854" y="175" font-size="135" transform="rotate(8 854 175)">!</text></g>
+<!-- Original, code-drawn figures inspired by the reference's bright silhouettes. -->
+<g stroke="#080808" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+<g fill="#f7ed32" transform="translate(48 10) rotate(-7 65 110)"><path d="M59 78C37 72 24 52 17 23L4 29C8 65 23 90 43 100L37 159 48 160 46 220 63 220 70 164 81 218 98 216 89 157 81 100C103 77 116 48 121 18L107 14C100 41 86 65 75 76Z"/><path d="M51 51C41 30 54 18 69 23C87 28 87 46 77 58L74 77 59 78Z"/></g>
+<g fill="#ed78c9" transform="translate(385 5) rotate(7 60 115)"><path d="M49 76L24 104 4 92-3 105 29 124 49 108 41 146 18 185 35 197 63 165 87 187 113 216 126 205 104 171 78 143 85 108 108 91 102 76 76 91 68 77Z"/><path d="M47 53C30 39 40 19 56 20C76 18 83 35 71 51L67 78 49 76Z"/></g>
+<g fill="#28a9d6" transform="translate(720 8) rotate(-7 60 115)"><path d="M44 75L24 89 3 71-6 81 22 111 44 102 36 153 44 214 61 214 59 157 73 153 84 209 100 206 91 144 82 99 111 69 137 41 127 29 96 59 69 76Z"/><path d="M44 48C30 30 43 13 60 18C80 19 84 37 70 51L69 76 44 75Z"/></g>
+<g fill="#15b477"><path d="M326 37l8-17 8 17 19 7-19 8-8 18-8-18-19-8Z"/></g>
+<g fill="#8b6ad5"><circle cx="959" cy="214" r="14"/></g>
+</g></svg>
