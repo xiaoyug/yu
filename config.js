@@ -10,6 +10,6 @@ export const CARD = {
 };
 // 照片墙（Supabase 中转，大屏每 5 秒拉取一次）
 export const WALL = {
-  url: 'https://kqttuewfmvuuohvqbhel.supabase.co',
+  url: 'https://mufriends.mushenzhen.xyz/proxy',
   anonKey: 'sb_publishable_TeAH2DCcPXl2e-MVtwyPOQ_kIEQ79YB',
 };
