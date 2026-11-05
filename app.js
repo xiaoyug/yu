@@ -138,11 +138,14 @@ async function pushToWall() {
   $('status').textContent = '正在推上照片墙… / Pushing to the wall…';
   try {
     const headers = { apikey: WALL.anonKey, Authorization: `Bearer ${WALL.anonKey}` };
+    // 预检：先确认能连上云端，区分「网络不通」和「写入被拒」
+    const ping = await fetch(`${WALL.url}/rest/v1/photos?select=id&limit=1`, { headers });
+    if (!ping.ok) throw new Error(`连接云端被拒 HTTP ${ping.status}`);
     const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
     const up = await fetch(`${WALL.url}/storage/v1/object/photos/${path}`, {
       method: 'POST', headers: { ...headers, 'Content-Type': CARD.MIME }, body: state.file,
     });
-    if (!up.ok) throw new Error(`upload ${up.status}`);
+    if (!up.ok) throw new Error(`传照片被拒 HTTP ${up.status}`);
     const nickname = $('who').value.trim() || $('introWho').value.trim().split(/[\n,，]/)[0].trim();
     const ins = await fetch(`${WALL.url}/rest/v1/photos`, {
       method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
@@ -153,10 +156,11 @@ async function pushToWall() {
         deleted: false,
       }),
     });
-    if (!ins.ok) throw new Error(`insert ${ins.status}`);
+    if (!ins.ok) throw new Error(`写记录被拒 HTTP ${ins.status}`);
     $('status').textContent = '已上墙！去大屏幕找你的照片 🎉 / On the wall! Find your card on the big screen.';
-  } catch {
-    $('status').textContent = '上墙失败，检查网络后点 ③ 重试。 / Push failed. Check connection and tap ③ again.';
+  } catch (e) {
+    const why = (e && e.message) || String(e);
+    $('status').textContent = `上墙失败：${why} · 检查网络后点 ③ 重试。 / Failed: ${why}`;
   } finally {
     wallBusy = false; buttons(true);
   }
