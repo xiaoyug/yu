@@ -1,4 +1,4 @@
-import { CARD } from './config.js';
+import { CARD, WALL } from './config.js';
 import { renderCard } from './card.js';
 
 const $ = id => document.getElementById(id);
@@ -24,7 +24,7 @@ let version = 0, timer, photoRequest = 0, qrRequest = 0, photoPending = false;
 const decode = src => new Promise((resolve, reject) => {
   const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = src;
 });
-function buttons(ready) { $('save').disabled = $('send').disabled = !ready; }
+function buttons(ready) { $('save').disabled = $('send').disabled = $('wall').disabled = !ready; }
 function invalidate() { version++; state.file = null; buttons(false); }
 function render() {
   const current = ++version;
@@ -128,6 +128,40 @@ function share(saving) {
 }
 $('save').addEventListener('click', () => share(true));
 $('send').addEventListener('click', () => share(false));
+
+// ③ 推上照片墙：把话题卡传到 Supabase，大屏 5 秒内弹出。
+// 纯 fetch，不引 SDK —— 保持离线安装包零依赖；上墙这一步本身就需要网络。
+let wallBusy = false;
+async function pushToWall() {
+  if (!state.file || wallBusy) return;
+  wallBusy = true; buttons(false);
+  $('status').textContent = '正在推上照片墙… / Pushing to the wall…';
+  try {
+    const headers = { apikey: WALL.anonKey, Authorization: `Bearer ${WALL.anonKey}` };
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+    const up = await fetch(`${WALL.url}/storage/v1/object/photos/${path}`, {
+      method: 'POST', headers: { ...headers, 'Content-Type': CARD.MIME }, body: state.file,
+    });
+    if (!up.ok) throw new Error(`upload ${up.status}`);
+    const nickname = $('who').value.trim() || $('introWho').value.trim().split(/[\n,，]/)[0].trim();
+    const ins = await fetch(`${WALL.url}/rest/v1/photos`, {
+      method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nickname: nickname.slice(0, 30),
+        message: $('line').value.trim().slice(0, 140),
+        photo_url: `${WALL.url}/storage/v1/object/public/photos/${path}`,
+        deleted: false,
+      }),
+    });
+    if (!ins.ok) throw new Error(`insert ${ins.status}`);
+    $('status').textContent = '已上墙！去大屏幕找你的照片 🎉 / On the wall! Find your card on the big screen.';
+  } catch {
+    $('status').textContent = '上墙失败，检查网络后点 ③ 重试。 / Push failed. Check connection and tap ③ again.';
+  } finally {
+    wallBusy = false; buttons(true);
+  }
+}
+$('wall').addEventListener('click', pushToWall);
 render();
 const savedQR = read(KEY.qr);
 if (savedQR) {

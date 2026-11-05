@@ -8,3 +8,8 @@ export const CARD = {
   HINT: '长按识别二维码 · Scan to connect',
   MIME: 'image/jpeg', QUALITY: 0.92,
 };
+// 照片墙（Supabase 中转，大屏每 5 秒拉取一次）
+export const WALL = {
+  url: 'https://kqttuewfmvuuohvqbhel.supabase.co',
+  anonKey: 'sb_publishable_TeAH2DCcPXl2e-MVtwyPOQ_kIEQ79YB',
+};
