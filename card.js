@@ -94,8 +94,7 @@ function layout(ctx, state) {
   if (state.introReach) { y += 36; add(state.introReach, 28, THEME.soft); }
   const qrY = y + 40;
   const height = Math.ceil(state.qrImg ? qrY + C.QR + 96 : y + 64);
-  const artY = height;
-  return {blocks, topics, qrY, artY, height: height + 220};
+  return {blocks, topics, qrY, height};
 }
 
 export function cardHeight(state, ctx) {
@@ -127,7 +126,6 @@ export function renderCard(ctx, state) {
     ctx.fillStyle = topic.color;
     ctx.fillRect(C.PAD - 18, topic.y, C.W - C.PAD * 2 + 36, topic.height);
   }
-  if (state.artImg) ctx.drawImage(state.artImg, C.PAD, result.artY, C.W - C.PAD * 2, 210);
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
   for (const block of result.blocks) {
