@@ -129,7 +129,7 @@ function share(saving) {
 $('save').addEventListener('click', () => share(true));
 $('send').addEventListener('click', () => share(false));
 
-// ③ 推上照片墙：把话题卡传到 Supabase，大屏 5 秒内弹出。
+// ① 推上照片墙：把话题卡传到 Supabase，大屏 5 秒内弹出。
 // 纯 fetch，不引 SDK —— 保持离线安装包零依赖；上墙这一步本身就需要网络。
 let wallBusy = false;
 async function pushToWall() {
@@ -160,7 +160,7 @@ async function pushToWall() {
     $('status').textContent = '已上墙！去大屏幕找你的照片 🎉 / On the wall! Find your card on the big screen.';
   } catch (e) {
     const why = (e && e.message) || String(e);
-    $('status').textContent = `上墙失败：${why} · 检查网络后点 ③ 重试。 / Failed: ${why}`;
+    $('status').textContent = `上墙失败：${why} · 检查网络后点 ① 重试。 / Failed: ${why}`;
   } finally {
     wallBusy = false; buttons(true);
   }
